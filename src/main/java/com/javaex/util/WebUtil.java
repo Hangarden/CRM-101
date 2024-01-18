@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class WebUtil {
+	public static String ipAddress="jdbc:oracle:thin:@172.20.40.73:1521:xe";
 	
 	public static void forward(HttpServletRequest request, HttpServletResponse response, String path) 
 			throws ServletException, IOException {

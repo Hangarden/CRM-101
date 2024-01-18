@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.javaex.util.WebUtil;
 import com.javaex.vo.UserVo;
 
 public class UserDaoImpl implements UserDao{
@@ -13,7 +14,8 @@ public class UserDaoImpl implements UserDao{
     Connection conn = null;
     try {
       Class.forName("oracle.jdbc.driver.OracleDriver");
-      String dburl = "jdbc:oracle:thin:@localhost:1521:xe";
+//      String dburl = "jdbc:oracle:thin:@localhost:1521:xe";
+      String dburl = WebUtil.ipAddress;
       conn = DriverManager.getConnection(dburl, "webdb", "1234");
     } catch (ClassNotFoundException e) {
       System.err.println("JDBC 드라이버 로드 실패!");

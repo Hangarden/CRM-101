@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.javaex.util.WebUtil;
 import com.javaex.vo.GuestbookVo;
 
 public class GuestbookDaoImpl implements GuestbookDao {
@@ -15,7 +16,8 @@ public class GuestbookDaoImpl implements GuestbookDao {
     Connection conn = null;
     try {
       Class.forName("oracle.jdbc.driver.OracleDriver");
-      String dburl = "jdbc:oracle:thin:@localhost:1521:xe";
+//      String dburl = "jdbc:oracle:thin:@localhost:1521:xe";
+      String dburl = WebUtil.ipAddress;
       conn = DriverManager.getConnection(dburl, "webdb", "1234");
     } catch (ClassNotFoundException e) {
       System.err.println("JDBC 드라이버 로드 실패!");
