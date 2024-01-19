@@ -9,6 +9,10 @@ public class BoardVo {
 	private String regDate;
 	private int userNo;
 	private String userName;
+	
+	public BoardVo(String title) {
+		this.title = title;
+	}
 
 	public BoardVo() {
 	}
