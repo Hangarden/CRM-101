@@ -39,15 +39,14 @@ public class BoardServlet extends HttpServlet {
 			//WebUtil.forward(request, response, "/WEB-INF/views/board/list.jsp");
 			
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/board/list.jsp");
-	    rd.forward(request, response);
+			rd.forward(request, response);
 	    
 		} else if ("read".equals(actionName)) {
 			// 게시물 가져오기
 			int no = Integer.parseInt(request.getParameter("no"));
 			BoardDao dao = new BoardDaoImpl();
 			BoardVo boardVo = dao.getBoard(no);
-
-			System.out.println(boardVo.toString());
+			
 
 			// 게시물 화면에 보내기
 			request.setAttribute("boardVo", boardVo);
@@ -109,13 +108,14 @@ public class BoardServlet extends HttpServlet {
 			
 		} else if ("search".equals(actionName)) {
 			
-			System.out.println(request.getParameter("kwd"));
 			String title = request.getParameter("kwd");
+			
 			
 			BoardVo vo = new BoardVo(title);
 			BoardDao dao = new BoardDaoImpl();
 			List<BoardVo> list = dao.search(vo);
 			System.out.println(list.toString());
+			
 
 			
 			// 리스트 화면에 보내기

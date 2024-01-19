@@ -282,7 +282,11 @@ public class BoardDaoImpl implements BoardDao {
 		  conn = getConnection();
 
 			// 3. SQL문 준비 / 바인딩 / 실행
-			String query = " SELECT *  FROM BOARD WHERE TITLE LIKE ? ";
+		  	
+		  String query = "SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name " +
+	               "FROM BOARD b, USERS u " +
+	               "WHERE b.TITLE || u.NAME LIKE ? " +
+	               "AND b.USER_NO = u.NO";
 			
 			pstmt = conn.prepareStatement(query);
 
@@ -324,7 +328,6 @@ public class BoardDaoImpl implements BoardDao {
 
 		return list;
 	}
-	
 	
 	
 }
