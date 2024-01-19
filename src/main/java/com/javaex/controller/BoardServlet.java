@@ -121,6 +121,7 @@ public class BoardServlet extends HttpServlet {
 						
 			// 리스트 화면에 보내기
 			request.setAttribute("list", list);
+			request.setAttribute("str", str);
 			
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/board/list.jsp");
 		    rd.forward(request, response);

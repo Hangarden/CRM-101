@@ -24,7 +24,7 @@
         				<option value="title">제목</option>
         				<option value="content">내용</option>
     				</select>					
-					<input type="text" id="kwd" name="kwd" value="">
+					<input type="text" id="kwd" name="kwd" value="<%= (request.getAttribute("str") != null) ? request.getAttribute("str") : "" %>">
 					<input type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex">
