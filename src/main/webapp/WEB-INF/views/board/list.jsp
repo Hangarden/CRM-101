@@ -9,6 +9,20 @@
 <title>Mysite</title>
 </head>
 <body>
+<%
+int nowBlock=(Integer)request.getAttribute("nowBlock");
+int start=(Integer)request.getAttribute("start");
+
+int pagePerBlock = (Integer) request.getAttribute("pagePerBlock");
+int totalRecord = (Integer) request.getAttribute("totalRecord");
+int totalPage = (Integer) request.getAttribute("totalPage");
+int totalBlock = (Integer) request.getAttribute("totalBlock");
+int nowPage = (Integer) request.getAttribute("nowPage");
+
+int endPage=nowBlock*pagePerBlock;
+int startPage=endPage-4;
+%>
+
 	<div id="container">
 		
 		<c:import url="/WEB-INF/views/includes/header.jsp"></c:import>
@@ -36,7 +50,7 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>				
-					<c:forEach items="${list }" var="vo">
+					<c:forEach items="${list}" var="vo">
 						<tr>
 							<td>${vo.no }</td>
 							<td><a href="/mysite/board?a=read&no=${vo.no }"> ${vo.title } </a></td>
@@ -53,18 +67,26 @@
 				</table>
 				<div class="pager">
 					<ul>
-						<li><a href="">◀</a></li>
-						<li><a href="">1</a></li>
-						<li><a href="">2</a></li>
-						<li class="selected">3</li>
-						<li><a href="">4</a></li>
-						<li><a href="">5</a></li>
-						<li><a href="">6</a></li>
-						<li><a href="">7</a></li>
-						<li><a href="">8</a></li>
-						<li><a href="">9</a></li>
-						<li><a href="">10</a></li>
-						<li><a href="">▶</a></li>
+						<c:if test="${nowBlock > 1 }">
+							<li><a href="/mysite/board?a=list&nowPage=<%= (nowBlock-1)*pagePerBlock %>"><</a></li>
+						</c:if>
+						<%				
+							for(int i=startPage;i<=endPage && i<=totalPage;i++){
+								if(i==nowPage){%>
+								<li class="selected">
+								<%}else{ %>
+								<li>
+								<%} %>
+									<a href="/mysite/board?a=list&nowPage=<%=i %>">
+										<%=i %>
+									</a>
+								</li>
+							<%
+							}
+						%>
+						<c:if test="${nowBlock < totalBlock }">
+							<li><a href="/mysite/board?a=list&nowPage=<%= nowBlock * pagePerBlock + 1 %>">></a></li>
+						</c:if>
 					</ul>
 				</div>				
 				<c:if test="${authUser != null }">
