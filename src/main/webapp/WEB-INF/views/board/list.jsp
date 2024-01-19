@@ -18,15 +18,13 @@
 			<div id="board">
 				<form id="search_form" action="/mysite/board" method="post">
 				<input type="hidden" name="a" value="search">
-					<%---
 					<select name="search_option">
-        				<option value="author">작성자</option>
+        				<option value="author" selected>작성자</option>
         				<option value="post_date">게시물 작성일시</option>
         				<option value="title">제목</option>
         				<option value="content">내용</option>
     				</select>					
-					 --%>
-					<input type="text" id="kwd" name="kwd" value="">
+					<input type="text" id="kwd" name="kwd" value="<%= (request.getAttribute("str") != null) ? request.getAttribute("str") : "" %>">
 					<input type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex">

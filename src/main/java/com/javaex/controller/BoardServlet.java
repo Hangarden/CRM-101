@@ -47,6 +47,11 @@ public class BoardServlet extends HttpServlet {
 			BoardDao dao = new BoardDaoImpl();
 			BoardVo boardVo = dao.getBoard(no);
 			
+			//조회수 올리기
+			int hitCount = boardVo.getHit();
+			hitCount++;
+			boardVo.setHit(hitCount);
+			dao.hitUp(boardVo);
 
 			// 게시물 화면에 보내기
 			request.setAttribute("boardVo", boardVo);
@@ -108,18 +113,15 @@ public class BoardServlet extends HttpServlet {
 			
 		} else if ("search".equals(actionName)) {
 			
-			String title = request.getParameter("kwd");
-			
-			
-			BoardVo vo = new BoardVo(title);
+			String str = request.getParameter("kwd");
+			String option = request.getParameter("search_option");
+						
 			BoardDao dao = new BoardDaoImpl();
-			List<BoardVo> list = dao.search(vo);
-			System.out.println(list.toString());
-			
-
-			
+			List<BoardVo> list = dao.search(str, option);
+						
 			// 리스트 화면에 보내기
 			request.setAttribute("list", list);
+			request.setAttribute("str", str);
 			
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/board/list.jsp");
 		    rd.forward(request, response);
