@@ -38,7 +38,7 @@ public class BoardDaoImpl implements BoardDao {
 			conn = getConnection();
 
 			// 3. SQL문 준비 / 바인딩 / 실행
-			String query = "select b.no, b.title, b.hit, b.reg_date, b.user_no, u.name "
+			String query = "select b.no, b.title, b.hit, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, b.user_no, u.name "
 					     + " from board b, users u "
 					     + " where b.user_no = u.no "
 					     + " order by no desc";
@@ -269,7 +269,7 @@ public class BoardDaoImpl implements BoardDao {
 	}
 
 	@Override
-	public List<BoardVo> search(BoardVo vo) {
+	public List<BoardVo> search(String str, String option) {
 		// 0. import java.sql.*;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -282,15 +282,33 @@ public class BoardDaoImpl implements BoardDao {
 		  conn = getConnection();
 
 			// 3. SQL문 준비 / 바인딩 / 실행
-		  	
-		  String query = "SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name " +
-	               "FROM BOARD b, USERS u " +
-	               "WHERE b.TITLE || u.NAME LIKE ? " +
-	               "AND b.USER_NO = u.NO";
+		  String query = "";
+		  
+		  if(option.equals("author")) {
+			  query = "SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name " +
+		               "FROM BOARD b, USERS u " +
+		               "WHERE u.NAME LIKE ? " +
+		               "AND b.USER_NO = u.NO";
+		  }else if(option.equals("post_date")) {
+			  query = "SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name " +
+		               "FROM BOARD b, USERS u " +
+		               "WHERE b.reg_date LIKE ? " +
+		               "AND b.USER_NO = u.NO";
+		  }else if(option.equals("title")) {
+			  query = "SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name " +
+		               "FROM BOARD b, USERS u " +
+		               "WHERE b.title LIKE ? " +
+		               "AND b.USER_NO = u.NO";
+		  }else if(option.equals("content")) {
+			  query = "SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name " +
+		               "FROM BOARD b, USERS u " +
+		               "WHERE b.content LIKE ? " +
+		               "AND b.USER_NO = u.NO";
+		  }
 			
 			pstmt = conn.prepareStatement(query);
 
-			pstmt.setString(1,"%" + vo.getTitle() + "%");
+			pstmt.setString(1,"%" + str + "%");
 
 			rs = pstmt.executeQuery();
 
@@ -327,6 +345,51 @@ public class BoardDaoImpl implements BoardDao {
 		}
 
 		return list;
+	}
+
+	@Override
+	public int hitUp(BoardVo vo) {
+		// 0. import java.sql.*;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int count = 0;
+
+		try {
+		  conn = getConnection();
+
+			// 3. SQL문 준비 / 바인딩 / 실행
+			String query = " UPDATE board b\r\n "
+					+ " SET b.HIT = ?\r\n "
+					+ " WHERE b.NO = ? ";
+			
+			pstmt = conn.prepareStatement(query);
+
+			pstmt.setInt(1, vo.getHit());
+			pstmt.setInt(2, vo.getNo());
+
+			count = pstmt.executeUpdate();
+
+			// 4.결과처리
+			System.out.println(count + "건 수정");
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			// 5. 자원정리
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("error:" + e);
+			}
+
+		}
+
+		return count;
 	}
 	
 	
