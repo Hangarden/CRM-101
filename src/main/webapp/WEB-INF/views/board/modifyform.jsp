@@ -16,7 +16,7 @@
 		
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="/mysite/board">
+				<form class="board-form" method="post" action="/mysite/boardwrite" enctype="multipart/form-data">
 					<input type="hidden" name="a" value="modify" />
 					<input type="hidden" name="no" value="${boardVo.no}" />
 				
@@ -34,6 +34,22 @@
 								<textarea id="content" name="content">${boardVo.content}</textarea>
 							</td>
 						</tr>
+							<tr>
+							    <td class="label">현재 첨부 파일</td>
+							    <td>
+							        <c:if test="${not empty boardVo.filename}">
+							            ${boardVo.filename} (파일 크기: ${boardVo.filesize} bytes)
+							        </c:if>
+						        <c:if test="${empty boardVo.filename}">
+							            첨부된 파일 없음
+						        </c:if>
+							    </td>
+							</tr>
+							<tr>
+							    <td class="label">새 파일 업로드</td>
+							    <td><input type="file" name="file" size="50" maxlength="50"></td>
+							</tr>
+						
 					</table>
 				
 					<div class="bottom">
