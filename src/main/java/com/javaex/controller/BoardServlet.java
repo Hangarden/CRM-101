@@ -25,6 +25,7 @@ public class BoardServlet extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		String actionName = request.getParameter("a");
+		System.out.println("---------------------");
 		System.out.println("board:" + actionName);
 
 		if ("list".equals(actionName)) {
@@ -32,7 +33,7 @@ public class BoardServlet extends HttpServlet {
 			BoardDao dao = new BoardDaoImpl();			
 
 			//필요한 인수들 생성 및 정의
-			int totalRecord=0; //전체레코드수
+			int totalRecord; //전체레코드수
 			int numPerPage=10; // 페이지당 레코드 수 
 			int pagePerBlock=5; //블럭당 페이지수 
 			int nowPage=1; // 현재페이지
@@ -46,9 +47,12 @@ public class BoardServlet extends HttpServlet {
 			int totalPage=(int)Math.ceil((double)totalRecord/numPerPage);
 			int totalBlock=(int)Math.ceil((double)totalPage/pagePerBlock);
 			int nowBlock=(int)Math.ceil((double)nowPage/pagePerBlock);
+			int endPage=nowBlock*pagePerBlock;
+			int startPage=endPage-4;
 			
 			List<BoardVo> list = dao.getSubList(nowPage, numPerPage);
 			System.out.println(list.toString());
+			System.out.println("nowPage: "+nowPage);
 			
 			request.setAttribute("pagePerBlock", pagePerBlock);
 			request.setAttribute("totalRecord", totalRecord);
@@ -56,6 +60,8 @@ public class BoardServlet extends HttpServlet {
 			request.setAttribute("totalBlock", totalBlock);
 			request.setAttribute("nowBlock", nowBlock);
 			request.setAttribute("nowPage", nowPage);
+			request.setAttribute("endPage", endPage);
+			request.setAttribute("startPage", startPage);
 			
 			// 리스트 화면에 보내기
 			request.setAttribute("list", list);

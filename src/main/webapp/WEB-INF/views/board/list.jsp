@@ -18,8 +18,6 @@ int totalPage = (Integer) request.getAttribute("totalPage");
 int totalBlock = (Integer) request.getAttribute("totalBlock");
 int nowPage = (Integer) request.getAttribute("nowPage");
 
-int endPage=nowBlock*pagePerBlock;
-int startPage=endPage-4;
 %>
 
 	<div id="container">
@@ -69,11 +67,9 @@ int startPage=endPage-4;
 						<c:if test="${nowBlock > 1 }">
 							<li><a href="/mysite/board?a=list&nowPage=<%= (nowBlock-1)*pagePerBlock %>"><</a></li>
 						</c:if>
-
 						<c:forEach var="i" begin="${startPage}" end="${endPage > totalPage ? totalPage : endPage}">
 						    <c:if test="${i <= totalPage}">
 						        <c:set var="isSelected" value="${i eq nowPage}" />
-						
 						        <li class="${isSelected ? 'selected' : ''}">
 						            <a href="/mysite/board?a=list&nowPage=${i}">
 						                ${i}
@@ -81,9 +77,8 @@ int startPage=endPage-4;
 						        </li>
 						    </c:if>
 						</c:forEach>
-						
 
-   					 
+
 						<c:if test="${nowBlock < totalBlock }">
 							<li><a href="/mysite/board?a=list&nowPage=<%= nowBlock * pagePerBlock + 1 %>">></a></li>
 						</c:if>

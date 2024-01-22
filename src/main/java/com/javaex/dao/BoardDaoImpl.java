@@ -87,22 +87,29 @@ public class BoardDaoImpl implements BoardDao {
 			ResultSet rs = null;
 			List<BoardVo> list = new ArrayList<BoardVo>();
 			int startNum = (nowPage-1)*pagePerNum+1;
+			System.out.println("startRowNum: "+ startNum);
 			
 			try {
 				conn = getConnection();
 
 				// 3. SQL문 준비 / 바인딩 / 실행
-				String query = "SELECT ROWNUM AS rn, b.*\r\n"
-						+ "FROM (select b.no, b.title, b.hit, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, b.user_no, u.name \r\n"
-						+ "from board b, users u \r\n"
-						+ "where b.user_no = u.no\r\n"
-						+ "order by no DESC) b\r\n"
-						+ "WHERE rownum BETWEEN ? AND ?";
+				String query = "SELECT c.*\r\n"
+						+ "FROM (\r\n"
+						+ "    SELECT ROWNUM AS rn, b.*\r\n"
+						+ "    FROM (\r\n"
+						+ "        SELECT b.no, b.title, b.hit, TO_CHAR(b.reg_date, 'YY-MM-DD HH24:MI') AS reg_date, b.user_no, u.name \r\n"
+						+ "        FROM board b, users u \r\n"
+						+ "        WHERE b.user_no = u.no\r\n"
+						+ "        ORDER BY no DESC\r\n"
+						+ "    ) b\r\n"
+						+ ") c\r\n"
+						+ "WHERE c.rn BETWEEN ? AND ?";
 				
 				pstmt = conn.prepareStatement(query);
 				pstmt.setInt(1,startNum);
 				pstmt.setInt(2,startNum + pagePerNum-1);
-
+				System.out.println("endRowNum: "+ (startNum + pagePerNum-1));
+				
 				rs = pstmt.executeQuery();
 				// 4.결과처리
 				while (rs.next()) {
