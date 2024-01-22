@@ -29,45 +29,32 @@ public class BoardServlet extends HttpServlet {
 
 		if ("list".equals(actionName)) {
 			// 리스트 가져오기
-			BoardDao dao = new BoardDaoImpl();
-			List<BoardVo> list = dao.getList();
-
-			System.out.println(list.toString());
-			
+			BoardDao dao = new BoardDaoImpl();			
 
 			//필요한 인수들 생성 및 정의
 			int totalRecord=0; //전체레코드수
 			int numPerPage=10; // 페이지당 레코드 수 
 			int pagePerBlock=5; //블럭당 페이지수 
-			  
-			int totalPage=0; //전체 페이지 수
-			int totalBlock=0;  //전체 블럭수 
-	
 			int nowPage=1; // 현재페이지
-			int nowBlock=1;  //현재블럭
-			  
-			int start=0; //디비의 select 시작번호
-			int end=9; //시작번호로 부터 가져올 select 갯수
 			
-			totalRecord=list.size();
 			if(request.getParameter("nowPage")!=null) {
 				nowPage=Integer.parseInt((String)request.getParameter("nowPage"));
 				System.out.println("nowPage:"+nowPage);
 			}
-			totalPage=(int)Math.ceil((double)totalRecord/numPerPage);
-			totalBlock=(int)Math.ceil((double)totalPage/pagePerBlock);
-			nowBlock=(int)Math.ceil((double)nowPage/pagePerBlock);
+			totalRecord=dao.getTotalRecord("", "");
+			System.out.println("totalrecord: "+totalRecord);
+			int totalPage=(int)Math.ceil((double)totalRecord/numPerPage);
+			int totalBlock=(int)Math.ceil((double)totalPage/pagePerBlock);
+			int nowBlock=(int)Math.ceil((double)nowPage/pagePerBlock);
 			
-			start=numPerPage*(nowPage-1);
-			//end=10;
-			list=list.subList(start, Math.min(start+numPerPage,totalRecord));
+			List<BoardVo> list = dao.getSubList(nowPage, numPerPage);
+			System.out.println(list.toString());
 			
 			request.setAttribute("pagePerBlock", pagePerBlock);
 			request.setAttribute("totalRecord", totalRecord);
 			request.setAttribute("totalPage", totalPage);
 			request.setAttribute("totalBlock", totalBlock);
 			request.setAttribute("nowBlock", nowBlock);
-			request.setAttribute("start", start);
 			request.setAttribute("nowPage", nowPage);
 			
 			// 리스트 화면에 보내기
