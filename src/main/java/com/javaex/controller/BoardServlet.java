@@ -25,24 +25,39 @@ public class BoardServlet extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		String actionName = request.getParameter("a");
-		System.out.println("---------------------");
+		System.out.println("---BoardSeverlet_acting---");
 		System.out.println("board:" + actionName);
 
 		if ("list".equals(actionName)) {
-			// 리스트 가져오기
 			BoardDao dao = new BoardDaoImpl();			
-
-			//필요한 인수들 생성 및 정의
-			int totalRecord; //전체레코드수
+			System.out.println("getParameter: "+request.getParameter("kwd"));
+			System.out.println("getParameter: "+request.getParameter("d_kwd"));
+			
+			//검색어 가져오기
+			String kwd="";
+			String option="";
+			if(request.getParameter("kwd")!=null) {
+				kwd = request.getParameter("kwd");
+				option = request.getParameter("option");	
+			}
+			else if(request.getParameter("d_kwd")!=null) {
+				kwd = request.getParameter("d_kwd");
+				option =request.getParameter("d_option");
+			}
+			System.out.println("key word:"+kwd+"\nsearch option: "+option);
+			//설정값 인수들
 			int numPerPage=10; // 페이지당 레코드 수 
 			int pagePerBlock=5; //블럭당 페이지수 
 			int nowPage=1; // 현재페이지
 			
+			//현재 페이지 가져오기, null 일경우 기본값 1 적용
 			if(request.getParameter("nowPage")!=null) {
 				nowPage=Integer.parseInt((String)request.getParameter("nowPage"));
 				System.out.println("nowPage:"+nowPage);
 			}
-			totalRecord=dao.getTotalRecord("", "");
+			
+			//필요 인수들 계산
+			int totalRecord=dao.getTotalRecord(option, kwd);
 			System.out.println("totalrecord: "+totalRecord);
 			int totalPage=(int)Math.ceil((double)totalRecord/numPerPage);
 			int totalBlock=(int)Math.ceil((double)totalPage/pagePerBlock);
@@ -50,9 +65,9 @@ public class BoardServlet extends HttpServlet {
 			int endPage=nowBlock*pagePerBlock;
 			int startPage=endPage-4;
 			
-			List<BoardVo> list = dao.getSubList(nowPage, numPerPage);
+			//페이지 하나의 리스트 가져오기
+			List<BoardVo> list = dao.getSubList(nowPage, numPerPage,option,kwd);
 			System.out.println(list.toString());
-			System.out.println("nowPage: "+nowPage);
 			
 			request.setAttribute("pagePerBlock", pagePerBlock);
 			request.setAttribute("totalRecord", totalRecord);
@@ -62,6 +77,9 @@ public class BoardServlet extends HttpServlet {
 			request.setAttribute("nowPage", nowPage);
 			request.setAttribute("endPage", endPage);
 			request.setAttribute("startPage", startPage);
+			
+			request.setAttribute("kwd", kwd);
+			request.setAttribute("option", option);
 			
 			// 리스트 화면에 보내기
 			request.setAttribute("list", list);
@@ -141,18 +159,26 @@ public class BoardServlet extends HttpServlet {
 			
 		} else if ("search".equals(actionName)) {
 			
-			String str = request.getParameter("kwd");
+			String kwd = request.getParameter("kwd");
 			String option = request.getParameter("search_option");
-						
-			BoardDao dao = new BoardDaoImpl();
-			List<BoardVo> list = dao.search(str, option);
+			System.out.println("kwd: "+kwd);
+			System.out.println("option: "+option);
+			//BoardDao dao = new BoardDaoImpl();
+			//List<BoardVo> list = dao.search(kwd, option);
 						
 			// 리스트 화면에 보내기
-			request.setAttribute("list", list);
-			request.setAttribute("str", str);
+			//request.setAttribute("list", list);
+			//request.setAttribute("kwd", kwd);
 			
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/board/list.jsp");
-		    rd.forward(request, response);
+			//리스트섹션에 검색어 전달하기 위함
+			request.setAttribute("r_option", option);
+			request.setAttribute("r_kwd", kwd);
+			
+			//RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/board/list.jsp");//얘가 왜 jsp로 가지
+			//RequestDispatcher rd = request.getRequestDispatcher("/mysite/board?a=list");
+			
+		   // rd.forward(request, response);
+		    WebUtil.redirect(request, response, "/mysite/board?a=list");
 
 		} else {
 			WebUtil.redirect(request, response, "/mysite/board?a=list");

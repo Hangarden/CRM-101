@@ -9,16 +9,6 @@
 <title>Mysite</title>
 </head>
 <body>
-<%
-int nowBlock=(Integer)request.getAttribute("nowBlock");
-
-int pagePerBlock = (Integer) request.getAttribute("pagePerBlock");
-int totalRecord = (Integer) request.getAttribute("totalRecord");
-int totalPage = (Integer) request.getAttribute("totalPage");
-int totalBlock = (Integer) request.getAttribute("totalBlock");
-int nowPage = (Integer) request.getAttribute("nowPage");
-
-%>
 
 	<div id="container">
 		
@@ -28,14 +18,14 @@ int nowPage = (Integer) request.getAttribute("nowPage");
 		<div id="content">
 			<div id="board">
 				<form id="search_form" action="/mysite/board" method="post">
-				<input type="hidden" name="a" value="search">
-					<select name="search_option">
-        				<option value="author" selected>작성자</option>
-        				<option value="post_date">게시물 작성일시</option>
+				<input type="hidden" name="a" value="list">
+					<select name="option">
+        				<option value="name" selected>작성자</option>
+        				<option value="reg_date">게시물 작성일시</option>
         				<option value="title">제목</option>
         				<option value="content">내용</option>
     				</select>					
-					<input type="text" id="kwd" name="kwd" value="<%= (request.getAttribute("str") != null) ? request.getAttribute("str") : "" %>">
+					<input type="text" id="kwd" name="kwd" value="${d_kwd }">
 					<input type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex">
@@ -65,13 +55,13 @@ int nowPage = (Integer) request.getAttribute("nowPage");
 				<div class="pager">
 					<ul>
 						<c:if test="${nowBlock > 1 }">
-							<li><a href="/mysite/board?a=list&nowPage=<%= (nowBlock-1)*pagePerBlock %>"><</a></li>
+							<li><a href="/mysite/board?a=list&nowPage=${(nowBlock-1)*pagePerBlock}&d_kwd=${kwd}&d_option=${option}"><</a></li>
 						</c:if>
 						<c:forEach var="i" begin="${startPage}" end="${endPage > totalPage ? totalPage : endPage}">
 						    <c:if test="${i <= totalPage}">
 						        <c:set var="isSelected" value="${i eq nowPage}" />
 						        <li class="${isSelected ? 'selected' : ''}">
-						            <a href="/mysite/board?a=list&nowPage=${i}">
+						            <a href="/mysite/board?a=list&nowPage=${i}&d_kwd=${kwd}&d_option=${option}">
 						                ${i}
 						            </a>
 						        </li>
@@ -80,7 +70,7 @@ int nowPage = (Integer) request.getAttribute("nowPage");
 
 
 						<c:if test="${nowBlock < totalBlock }">
-							<li><a href="/mysite/board?a=list&nowPage=<%= nowBlock * pagePerBlock + 1 %>">></a></li>
+							<li><a href="/mysite/board?a=list&nowPage=${nowBlock * pagePerBlock + 1}&d_kwd=${kwd}&d_option=${option}">></a></li>
 						</c:if>
 					</ul>
 				</div>				
@@ -88,7 +78,7 @@ int nowPage = (Integer) request.getAttribute("nowPage");
 					<div class="bottom">
 						<a href="/mysite/board?a=writeform" id="new-book">글쓰기</a>
 					</div>
-				</c:if>				
+				</c:if>			
 			</div>
 		</div>
 		

@@ -79,7 +79,7 @@ public class BoardDaoImpl implements BoardDao {
 		return list;
 
 	}
-	public List<BoardVo> getSubList(int nowPage,int pagePerNum) {
+	public List<BoardVo> getSubList(int nowPage,int pagePerNum,String option,String kwd) {
 		
 		// 0. import java.sql.*;
 			Connection conn = null;
@@ -89,25 +89,47 @@ public class BoardDaoImpl implements BoardDao {
 			int startNum = (nowPage-1)*pagePerNum+1;
 			System.out.println("startRowNum: "+ startNum);
 			
+			
 			try {
 				conn = getConnection();
 
 				// 3. SQL문 준비 / 바인딩 / 실행
-				String query = "SELECT c.*\r\n"
-						+ "FROM (\r\n"
-						+ "    SELECT ROWNUM AS rn, b.*\r\n"
-						+ "    FROM (\r\n"
-						+ "        SELECT b.no, b.title, b.hit, TO_CHAR(b.reg_date, 'YY-MM-DD HH24:MI') AS reg_date, b.user_no, u.name \r\n"
-						+ "        FROM board b, users u \r\n"
-						+ "        WHERE b.user_no = u.no\r\n"
-						+ "        ORDER BY no DESC\r\n"
-						+ "    ) b\r\n"
-						+ ") c\r\n"
-						+ "WHERE c.rn BETWEEN ? AND ?";
-				
-				pstmt = conn.prepareStatement(query);
-				pstmt.setInt(1,startNum);
-				pstmt.setInt(2,startNum + pagePerNum-1);
+				String query = "";
+				if(kwd!="") {
+					query = "SELECT c.*\r\n"
+							+ "FROM (\r\n"
+							+ "    SELECT ROWNUM AS rn, b.*\r\n"
+							+ "    FROM (\r\n"
+							+ "        SELECT b.no, b.title, b.hit, TO_CHAR(b.reg_date, 'YY-MM-DD HH24:MI') AS reg_date, b.user_no, u.name \r\n"
+							+ "        FROM board b, users u \r\n"
+							+ "        WHERE b.user_no = u.no\r\n"
+							+ "		   AND " + option + " LIKE ?\r\n"
+							+ "        ORDER BY no DESC\r\n"
+							+ "    ) b\r\n"
+							+ ") c\r\n"
+							+ "WHERE c.rn BETWEEN ? AND ?";
+					pstmt = conn.prepareStatement(query);
+					pstmt.setString(1, "%"+kwd+"%");
+					pstmt.setInt(2,startNum);
+					pstmt.setInt(3,startNum + pagePerNum-1);
+				}
+				else {
+					query = "SELECT c.*\r\n"
+							+ "FROM (\r\n"
+							+ "    SELECT ROWNUM AS rn, b.*\r\n"
+							+ "    FROM (\r\n"
+							+ "        SELECT b.no, b.title, b.hit, TO_CHAR(b.reg_date, 'YY-MM-DD HH24:MI') AS reg_date, b.user_no, u.name \r\n"
+							+ "        FROM board b, users u \r\n"
+							+ "        WHERE b.user_no = u.no\r\n"
+							+ "        ORDER BY no DESC\r\n"
+							+ "    ) b\r\n"
+							+ ") c\r\n"
+							+ "WHERE c.rn BETWEEN ? AND ?";
+					pstmt = conn.prepareStatement(query);
+					pstmt.setInt(1,startNum);
+					pstmt.setInt(2,startNum + pagePerNum-1);
+				}
+
 				System.out.println("endRowNum: "+ (startNum + pagePerNum-1));
 				
 				rs = pstmt.executeQuery();
@@ -158,12 +180,14 @@ public class BoardDaoImpl implements BoardDao {
 			
 			// 3. SQL문 준비 / 바인딩 / 실행
 			if (keyWord != null && keyWord!="") {
-				query = "SELECT COUNT(no)\r\n"
-						+ "FROM BOARD b\r\n"
-						+ "WHERE ? LIKE ?";
+				query = "SELECT COUNT(no) 	\r\n"
+						+ "FROM\r\n"
+						+ "(SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name\r\n"
+						+ "FROM BOARD b, USERS u\r\n"
+						+ "WHERE "+ keyField +" LIKE ?\r\n"
+						+ "AND b.USER_NO = u.NO)";
 				pstmt = conn.prepareStatement(query);
-				pstmt.setString(1, "%" + keyField + "%");
-				pstmt.setString(2, "%" + keyWord + "%");
+				pstmt.setString(1, "%" + keyWord + "%");
 			}
 			else {
 				query = "SELECT COUNT(no)\r\n"
