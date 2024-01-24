@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.javaex.util.WebUtil;
+import com.javaex.vo.BoardVo;
 import com.javaex.vo.GuestbookVo;
 
 public class GuestbookDaoImpl implements GuestbookDao {

@@ -30,7 +30,7 @@ public class BoardFileServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	// 파일저장소 경로
-	private static final String SAVEFOLDER = "/Users/User/git/CRM-101_3/src/main/webapp/WEB-INF/uploadfile";
+	private static final String SAVEFOLDER = "http://localhost:8080/mysite/main/webapp/WEB-INF/uploadfile";
 	private static final String ENCTYPE = "UTF-8";
 	private static int MAXSIZE = 5 * 1024 * 1024;
 	@Override
