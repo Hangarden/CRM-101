@@ -24,6 +24,7 @@
         				<option value="reg_date">게시물 작성일시</option>
         				<option value="title">제목</option>
         				<option value="content">내용</option>
+        				<option value="filename">파일이름</option>
     				</select>					
 					<input type="text" id="kwd" name="kwd" value="${d_kwd }">
 					<input type="submit" value="찾기">
