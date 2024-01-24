@@ -21,8 +21,8 @@ public class DownloadServlet extends HttpServlet {
         String filename = request.getParameter("filename");
 
         // 파일이 저장된 디렉토리 경로
-//        String filePath = "/javastudy/workspace/mysite/src/main/webapp/WEB-INF/uploadfile";
-        String filePath = "/Users/User/git/CRM-101_3/src/main/webapp/WEB-INF/uploadfile";
+        String filePath = "/javastudy/workspace/mysite/src/main/webapp/WEB-INF/uploadfile";
+        //String filePath = "/Users/User/git/CRM-101_3/src/main/webapp/WEB-INF/uploadfile";
       
 
         // 파일 객체 생성
