@@ -33,12 +33,12 @@ public class BoardServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String actionName = request.getParameter("a");
         System.out.println("---BoardSeverlet_acting---");
-        System.out.println("board:" + actionName);
+        System.out.println("board action:" + actionName);
 
         if ("list".equals(actionName)) {
             BoardDao dao = new BoardDaoImpl();
-            System.out.println("getParameter: "+request.getParameter("kwd"));
-            System.out.println("getParameter: "+request.getParameter("d_kwd"));
+            //System.out.println("getParameter: "+request.getParameter("kwd"));
+            //System.out.println("getParameter: "+request.getParameter("d_kwd"));
 
             //검색어 가져오기
             String kwd="";
@@ -51,7 +51,7 @@ public class BoardServlet extends HttpServlet {
                 kwd = request.getParameter("d_kwd");
                 option =request.getParameter("d_option");
             }
-            System.out.println("key word:"+kwd+"\nsearch option: "+option);
+            System.out.println("keyWord:"+kwd+"\nsearch option: "+option);
             //설정값 인수들
             int numPerPage=10; // 페이지당 레코드 수
             int pagePerBlock=5; //블럭당 페이지수
