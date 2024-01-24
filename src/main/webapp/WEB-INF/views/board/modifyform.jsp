@@ -41,6 +41,14 @@
 							            ${boardVo.filename} (파일 크기: ${boardVo.filesize} bytes)
 							        </c:if>
 						        <c:if test="${empty boardVo.filename}">
+							            첨부된 파일 없음 
+						        </c:if>
+					            </td>
+					            <td>
+      							<c:if test="${not empty boardVo.filename2}">
+							            ${boardVo.filename2} (파일 크기: ${boardVo.filesize2} bytes)
+							        </c:if>
+						        <c:if test="${empty boardVo.filename2}">
 							            첨부된 파일 없음
 						        </c:if>
 							    </td>
@@ -48,6 +56,10 @@
 							<tr>
 							    <td class="label">새 파일 업로드</td>
 							    <td><input type="file" name="file" size="50" maxlength="50"></td>
+							</tr>
+														<tr>
+							    <td class="label">새 파일 업로드2</td>
+							    <td><input type="file" name="file2" size="50" maxlength="50"></td>
 							</tr>
 						
 					</table>
