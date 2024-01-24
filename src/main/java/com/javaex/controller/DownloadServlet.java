@@ -14,14 +14,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.javaex.util.WebUtil;
+
 @WebServlet("/download")
 public class DownloadServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 파일 이름 파라미터 받기
         String filename = request.getParameter("filename");
 
-        // 파일이 저장된 디렉토리 경로
-        String filePath = "http://localhost:8080/mysite/main/webapp/WEB-INF/uploadfile";
+        // 파일이 저장된 디렉토리 경로 
+        String filePath = WebUtil.filePath;//"/javastudy/workspace/mysite/src/main/webapp/WEB-INF/uploadfile";
         //String filePath = "/Users/User/git/CRM-101_3/src/main/webapp/WEB-INF/uploadfile";
       
 

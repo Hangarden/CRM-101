@@ -65,7 +65,7 @@
 					</table>
 				
 					<div class="bottom">
-						<a href="/mysite/board">취소</a>
+						<a href="/mysite/board?a=read&no=${boardVo.no}">취소</a>
 						<input type="submit" value="수정">
 					</div>
 				</form>				
