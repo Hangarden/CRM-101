@@ -80,7 +80,7 @@ public class BoardFileServlet extends HttpServlet {
 //				String content = multi.getParameter("content");
 //				System.out.println(multi.getParameter("no"));
 //				int no = Integer.parseInt(multi.getParameter("no"));
-//				/* 파일첨부 시작 경성 */
+//				
 //				if (!file.exists())
 //					file.mkdirs();
 //				if (multi.getFilesystemName("file") != null) {
@@ -92,14 +92,14 @@ public class BoardFileServlet extends HttpServlet {
 //				System.out.println("content : [" + content + "]");
 //				System.out.println("filename: " + filename);
 //				System.out.println("filesize: " + filesize);
-//				/* 파일첨부 끝 경성 */
+//				
 //				BoardVo vo = new BoardVo(no, title, content);
 //				BoardDao dao = new BoardDaoImpl();
-//				/* 파일첨부 시작 경성 */
+//				
 //				// 아래 내용 set으로 값 넣기
 //				vo.setFilename(filename);
 //				vo.setFilesize(filesize);
-//				/* 파일첨부 끝 경성 */
+//				
 //				dao.update(vo);
 //				WebUtil.redirect(request, response, "/mysite/board?a=list");
 	            int no = Integer.parseInt(multi.getParameter("no"));
