@@ -33,7 +33,6 @@ public class BoardFileServlet extends HttpServlet {
 	private static final String SAVEFOLDER = "/Users/User/git/CRM-101_3/src/main/webapp/WEB-INF/uploadfile";
 	private static final String ENCTYPE = "UTF-8";
 	private static int MAXSIZE = 5 * 1024 * 1024;
-	/* 파일첨부 끝 경성 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -42,7 +41,7 @@ public class BoardFileServlet extends HttpServlet {
 		MultipartRequest multi = null;
 		File file = null;
 		try {
-	        multi = new MultipartRequest(request, SAVEFOLDER, MAXSIZE, ENCTYPE, new DefaultFileRenamePolicy());
+			multi = new MultipartRequest(request, SAVEFOLDER, MAXSIZE, ENCTYPE, new DefaultFileRenamePolicy());
 	        String actionName = multi.getParameter("a");
 	        System.out.println("boardfile:" + actionName);
 	        
@@ -67,41 +66,28 @@ public class BoardFileServlet extends HttpServlet {
 	                vo.setFilename(filename);
 	                vo.setFilesize(filesize);
 	            }
+	            
+	            // 두 번째 파일 처리
+	            String filename2 = null;
+	            int filesize2 = 0;
+	            if (multi.getFilesystemName("file2") != null) {
+	                filename2 = multi.getFilesystemName("file2");
+	                filesize2 = (int) multi.getFile("file2").length();
+
+	                vo.setFilename2(filename2);
+	                vo.setFilesize2(filesize2);
+	            }
 
 	            System.out.println("filename: " + filename);
 	            System.out.println("filesize: " + filesize);
 
+	            System.out.println("filesize2: " + filesize2);
+	            System.out.println("filename2: " + filename2);
 	            BoardDao dao = new BoardDaoImpl();
 	            dao.insert(vo);
 	            WebUtil.redirect(request, response, "/mysite/board?a=list");
 	        } else if ("modify".equals(actionName)) {
-				// 게시물 가져오기
-//				String title = multi.getParameter("title");
-//				String content = multi.getParameter("content");
-//				System.out.println(multi.getParameter("no"));
-//				int no = Integer.parseInt(multi.getParameter("no"));
-//				
-//				if (!file.exists())
-//					file.mkdirs();
-//				if (multi.getFilesystemName("file") != null) {
-//					filename = multi.getFilesystemName("file");
-//					filesize = (int) multi.getFile("file").length();
-//				}
-//				System.out.println("no : [" + no + "]");
-//				System.out.println("title : [" + title + "]");
-//				System.out.println("content : [" + content + "]");
-//				System.out.println("filename: " + filename);
-//				System.out.println("filesize: " + filesize);
-//				
-//				BoardVo vo = new BoardVo(no, title, content);
-//				BoardDao dao = new BoardDaoImpl();
-//				
-//				// 아래 내용 set으로 값 넣기
-//				vo.setFilename(filename);
-//				vo.setFilesize(filesize);
-//				
-//				dao.update(vo);
-//				WebUtil.redirect(request, response, "/mysite/board?a=list");
+
 	            int no = Integer.parseInt(multi.getParameter("no"));
 	            String title = multi.getParameter("title");
 	            String content = multi.getParameter("content");
@@ -121,6 +107,17 @@ public class BoardFileServlet extends HttpServlet {
 	                // 파일 정보 설정
 	                vo.setFilename(filename);
 	                vo.setFilesize(filesize);
+	            }
+	            
+	            // 두 번째 파일 처리
+	            String filename2 = null;
+	            int filesize2 = 0;
+	            if (multi.getFilesystemName("file2") != null) {
+	                filename2 = multi.getFilesystemName("file2");
+	                filesize2 = (int) multi.getFile("file2").length();
+
+	                vo.setFilename2(filename2);
+	                vo.setFilesize2(filesize2);
 	            }
 
 	            // 데이터베이스 업데이트

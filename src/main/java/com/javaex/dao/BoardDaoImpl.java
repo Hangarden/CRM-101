@@ -232,7 +232,7 @@ public class BoardDaoImpl implements BoardDao {
 	    try {
 	        conn = getConnection();
 
-	        String query = "SELECT b.no, b.title, b.content, b.hit, b.reg_date, b.user_no,  b.filesize, b.filename, u.name " +
+	        String query = "SELECT b.no, b.title, b.content, b.hit, b.reg_date, b.user_no,  b.filesize, b.filename, b.filesize2, b.filename2, u.name " +
 	                       "FROM board b, users u " +
 	                       "WHERE b.user_no = u.no AND b.no = ?";
 
@@ -249,8 +249,10 @@ public class BoardDaoImpl implements BoardDao {
 	            int userNo = rs.getInt("user_no");
 	            int filesize = rs.getInt("filesize");
 	            String filename = rs.getString("filename");
+	            int filesize2 = rs.getInt("filesize2");
+	            String filename2 = rs.getString("filename2");
 	            String userName = rs.getString("name");
-	            boardVo = new BoardVo(no, title, content, hit, regDate, userNo, userName,filesize, filename);
+	            boardVo = new BoardVo(no, title, content, hit, regDate, userNo, userName,filesize, filename, filesize2, filename2);
 
 	        }
 	    } catch (SQLException e) {
@@ -280,8 +282,10 @@ public class BoardDaoImpl implements BoardDao {
 
 	    try {
 	        conn = getConnection();
-	        String query = "INSERT INTO board (no, title, content, hit, reg_date, user_no, filesize, filename) " +
-	                       "VALUES (seq_board_no.nextval, ?, ?, 0, sysdate, ?, ?, ?)";
+	        String query = "INSERT INTO board (no, title, content, hit, reg_date, user_no, filesize, filename, filesize2, filename2) " +
+                    "VALUES (seq_board_no.nextval, ?, ?, 0, sysdate, ?, ?, ?, ?, ?)";
+//	        String query = "INSERT INTO board (no, title, content, hit, reg_date, user_no, filesize, filename, filesize2, filename2) " +
+//	                       "VALUES (seq_board_no.nextval, ?, ?, 0, sysdate, ?, ?, ?)";
 	        pstmt = conn.prepareStatement(query);
 
 	        pstmt.setString(1, vo.getTitle());
@@ -289,6 +293,8 @@ public class BoardDaoImpl implements BoardDao {
 	        pstmt.setInt(3, vo.getUserNo());
 	        pstmt.setLong(4, vo.getFilesize()); // 파일 크기를 설정합니다.
 	        pstmt.setString(5, vo.getFilename()); // 파일 이름 또는 경로를 설정합니다.
+	        pstmt.setLong(6, vo.getFilesize2());
+			pstmt.setString(7, vo.getFilename2());
 
 	        count = pstmt.executeUpdate();
 
@@ -412,14 +418,16 @@ public class BoardDaoImpl implements BoardDao {
 	        conn = getConnection();
 
 	        // 첨부파일 정보를 포함한 게시글 업데이트
-	        String query = "UPDATE board SET title = ?, content = ?, filename = ?, filesize = ? WHERE no = ?";
+	        String query = "UPDATE board SET title = ?, content = ?, filename = ?, filesize = ?, filename2 = ?, filesize2 = ? WHERE no = ?";
 	        pstmt = conn.prepareStatement(query);
 
 	        pstmt.setString(1, vo.getTitle());
 	        pstmt.setString(2, vo.getContent());
 	        pstmt.setString(3, vo.getFilename()); // 파일 이름
 	        pstmt.setLong(4, vo.getFilesize()); // 파일 크기
-	        pstmt.setInt(5, vo.getNo());
+	        pstmt.setString(5, vo.getFilename2()); // 파일 이름
+	        pstmt.setLong(6, vo.getFilesize2());
+	        pstmt.setInt(7, vo.getNo());
 
 	        count = pstmt.executeUpdate();
 

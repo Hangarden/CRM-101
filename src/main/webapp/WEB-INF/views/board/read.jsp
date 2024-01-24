@@ -33,15 +33,14 @@
 					        </div>
 					    </td>
 					</tr>
-					<c:if test="${not empty boardVo.filename}">
-					    <tr>
-					        <td class="label">첨부 파일</td>
-					        <td>
-					            <a href="/mysite/download?filename=${boardVo.filename}">${boardVo.filename}</a>
-					            (파일 크기: ${boardVo.filesize} bytes)
-					        </td>
-					    </tr>
-				    </c:if>
+					<tr>
+					    <td class="label">첨부파일1</td>
+					    <td><a href="/mysite/download?filename=${boardVo.filename}">${boardVo.filename}</a></td>
+					</tr>
+					<tr>
+					    <td class="label">첨부파일2</td>
+					    <td><a href="/mysite/download?filename=${boardVo.filename2}">${boardVo.filename2}</a></td>
+					</tr>
 				</table>
 				<div class="bottom">
 					<a href="/mysite/board">글목록</a>
