@@ -12,7 +12,6 @@
 </head>
 <body>
 	<div id="container">
-		
 		<c:import url="/WEB-INF/views/includes/header.jsp"></c:import>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp"></c:import>
 		
@@ -23,17 +22,26 @@
 						<th colspan="2">글보기</th>
 					</tr>
 					<tr>
-						<td class="label">제목</td>
-						<td>${boardVo.title }</td>
+					    <td class="label">제목</td>
+					    <td>${boardVo.title}</td>
 					</tr>
 					<tr>
-						<td class="label">내용</td>
-						<td>
-							<div class="view-content">
-								${fn:replace(boardVo.content, newLine, "<br>")}
-							</div>
-						</td>
+					    <td class="label">내용</td>
+					    <td>
+					        <div class="view-content">
+					            ${fn:replace(boardVo.content, newLine, "<br>")}
+					        </div>
+					    </td>
 					</tr>
+					<c:if test="${not empty boardVo.filename}">
+					    <tr>
+					        <td class="label">첨부 파일</td>
+					        <td>
+					            <a href="/mysite/download?filename=${boardVo.filename}">${boardVo.filename}</a>
+					            (파일 크기: ${boardVo.filesize} bytes)
+					        </td>
+					    </tr>
+				    </c:if>
 				</table>
 				<div class="bottom">
 					<a href="/mysite/board">글목록</a>

@@ -9,6 +9,8 @@ public class BoardVo {
 	private String regDate;
 	private int userNo;
 	private String userName;
+    private String filename;  // 파일 이름
+    private int filesize;    // 파일 크기
 	
 	public BoardVo(String title) {
 		this.title = title;
@@ -38,10 +40,27 @@ public class BoardVo {
 		this.userName = userName;
 	}
 	
-	public BoardVo(int no, String title, String content, int hit, String regDate, int userNo, String userName) {
+	public BoardVo(int no, String title, String content, int hit, String regDate, int userNo, String userName, int filesize, String filename ) {
 		this(no, title, hit, regDate, userNo, userName);
 		this.content = content;
+        this.filename = filename;
+        this.filesize = filesize;
+        System.out.println("이거임?");
 	}
+	
+    // 새로운 생성자: 파일 이름과 파일 크기를 포함
+//	public BoardVo(int no, String title, String content,int hit, String regDate, int userNo, String userName, String filename, int filesize) {
+//		this.no = no;
+//		this.title = title;
+//		this.content = content;
+//		this.hit = hit;
+//		this.regDate = regDate;
+//		this.userNo = userNo;
+//		this.userName = userName;
+//        this.filename = filename;
+//        this.filesize = filesize;
+//	}
+	
 
 	public int getNo() {
 		return no;
@@ -98,11 +117,33 @@ public class BoardVo {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+	public int getFilesize() {
+		return filesize;
+	}
 
+	public String getFilename() {
+		// TODO Auto-generated method stub
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+
+		this.filename = filename;
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setFilesize(int filesize) {
+		this.filesize = filesize;
+		// TODO Auto-generated method stub
+		
+	}
 	@Override
 	public String toString() {
 		return "BoardVo [no=" + no + ", title=" + title + ", content=" + content + ", hit=" + hit + ", regDate="
-				+ regDate + ", userNo=" + userNo + ", userName=" + userName + "]";
+				+ regDate + ", userNo=" + userNo + ", userName=" + userName + ", filename= " + filename +  ", filesize= " + filesize +" ]";
 	}
+
+
 
 }
