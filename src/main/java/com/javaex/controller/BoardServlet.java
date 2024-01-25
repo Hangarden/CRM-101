@@ -171,12 +171,12 @@ public class BoardServlet extends HttpServlet {
 
 			WebUtil.redirect(request, response, "/mysite/board?a=list");
 			
-		} else if ("search".equals(actionName)) {
-
-            String kwd = request.getParameter("kwd");
-            String option = request.getParameter("search_option");
-            System.out.println("kwd: "+kwd);
-            System.out.println("option: "+option);
+//		} else if ("search".equals(actionName)) {
+//
+//            String kwd = request.getParameter("kwd");
+//            String option = request.getParameter("search_option");
+//            System.out.println("kwd: "+kwd);
+//            System.out.println("option: "+option);
             //BoardDao dao = new BoardDaoImpl();
             //List<BoardVo> list = dao.search(kwd, option);
 
@@ -185,10 +185,10 @@ public class BoardServlet extends HttpServlet {
             //request.setAttribute("kwd", kwd);
 
             //리스트섹션에 검색어 전달하기 위함
-            request.setAttribute("r_option", option);
-            request.setAttribute("r_kwd", kwd);
+//            request.setAttribute("r_option", option);
+//            request.setAttribute("r_kwd", kwd);
 
-            //RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/board/list.jsp");//얘가 왜 jsp로 가지
+            //RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/board/list.jsp");
             //RequestDispatcher rd = request.getRequestDispatcher("/mysite/board?a=list");
 
             // rd.forward(request, response);
