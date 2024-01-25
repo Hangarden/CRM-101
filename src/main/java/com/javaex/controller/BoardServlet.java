@@ -97,6 +97,7 @@ public class BoardServlet extends HttpServlet {
         } else if ("read".equals(actionName)) {
 			// 게시물 가져오기
 			int no = Integer.parseInt(request.getParameter("no"));
+			int nowPage = Integer.parseInt(request.getParameter("nowPage"));
 			BoardDao dao = new BoardDaoImpl();
 			BoardVo boardVo = dao.getBoard(no);
 			
@@ -108,15 +109,18 @@ public class BoardServlet extends HttpServlet {
 
 			// 게시물 화면에 보내기
 			request.setAttribute("boardVo", boardVo);
+			request.setAttribute("nowPage", nowPage);
 			WebUtil.forward(request, response, "/WEB-INF/views/board/read.jsp");
 		} else if ("modifyform".equals(actionName)) {
 			// 게시물 가져오기
 			int no = Integer.parseInt(request.getParameter("no"));
+			int nowPage = Integer.parseInt(request.getParameter("nowPage"));
 			BoardDao dao = new BoardDaoImpl();
 			BoardVo boardVo = dao.getBoard(no);
 
 			// 게시물 화면에 보내기
 			request.setAttribute("boardVo", boardVo);
+			request.setAttribute("nowPage", nowPage);
 			WebUtil.forward(request, response, "/WEB-INF/views/board/modifyform.jsp");
 		} else if ("modify".equals(actionName)) {
             // 게시물 가져오기

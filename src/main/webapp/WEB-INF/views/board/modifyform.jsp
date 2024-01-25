@@ -19,6 +19,7 @@
 				<form class="board-form" method="post" action="/mysite/boardwrite" enctype="multipart/form-data">
 					<input type="hidden" name="a" value="modify" />
 					<input type="hidden" name="no" value="${boardVo.no}" />
+					<input type="hidden" name="nowPage" value="${nowPage}" />
 				
 					<table class="tbl-ex">
 						<tr>
@@ -65,7 +66,7 @@
 					</table>
 				
 					<div class="bottom">
-						<a href="/mysite/board?a=read&no=${boardVo.no}">취소</a>
+						<a href="/mysite/board?a=read&no=${boardVo.no}&nowPage=${nowPage}">취소</a>
 						<input type="submit" value="수정">
 					</div>
 				</form>				

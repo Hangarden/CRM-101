@@ -29,8 +29,7 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 public class BoardFileServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	// 파일저장소 경로 
-	//private static final String SAVEFOLDER = "/Users/User/git/CRM-101_3/src/main/webapp/WEB-INF/uploadfile";
+	// 파일저장소 경로
 	private static final String SAVEFOLDER = WebUtil.filePath;
 	private static final String ENCTYPE = "UTF-8";
 	private static int MAXSIZE = 5 * 1024 * 1024;
@@ -90,41 +89,74 @@ public class BoardFileServlet extends HttpServlet {
 	        } else if ("modify".equals(actionName)) {
 
 	            int no = Integer.parseInt(multi.getParameter("no"));
+	            int nowPage = Integer.parseInt(multi.getParameter("nowPage"));
+	            BoardDao dao = new BoardDaoImpl();
+	            BoardVo currentBoard = dao.getBoard(no); // 현재 게시글 정보 조회
+	            
+
 	            String title = multi.getParameter("title");
 	            String content = multi.getParameter("content");
 	            BoardVo vo = new BoardVo(no, title, content);
-
 	            // 파일 저장소 경로 초기화
 	            file = new File(SAVEFOLDER);
 	            if (!file.exists()) {
 	                file.mkdirs();
 	            }
 
-	            // 새로운 파일이 업로드 되었는지 확인
-	            if (multi.getFilesystemName("file") != null) {
-	                filename = multi.getFilesystemName("file");
+	            // 새 파일 체크
+	            filename = multi.getFilesystemName("file");
+	            if (filename != null) {
 	                filesize = (int) multi.getFile("file").length();
-
-	                // 파일 정보 설정
 	                vo.setFilename(filename);
 	                vo.setFilesize(filesize);
+	            } else {
+	                // 새 파일이 없으면 기존 파일 정보 유지
+	                vo.setFilename(currentBoard.getFilename());
+	                vo.setFilesize(currentBoard.getFilesize());
 	            }
-	            
-	            // 두 번째 파일 처리
+
 	            String filename2 = null;
 	            int filesize2 = 0;
-	            if (multi.getFilesystemName("file2") != null) {
-	                filename2 = multi.getFilesystemName("file2");
+	            // 두 번째 파일 체크
+	            filename2 = multi.getFilesystemName("file2");
+	            if (filename2 != null) {
 	                filesize2 = (int) multi.getFile("file2").length();
-
 	                vo.setFilename2(filename2);
 	                vo.setFilesize2(filesize2);
+	            } else {
+	                // 새 파일이 없으면 기존 두 번째 파일 정보 유지
+	                vo.setFilename2(currentBoard.getFilename2());
+	                vo.setFilesize2(currentBoard.getFilesize2());
 	            }
+	            
+//	            // 새로운 파일이 업로드 되었는지 확인
+//	            if (multi.getFilesystemName("file") != null) {
+//	                filename = multi.getFilesystemName("file");
+//	                filesize = (int) multi.getFile("file").length();
+//
+//	                // 파일 정보 설정
+//	                vo.setFilename(filename);
+//	                vo.setFilesize(filesize);
+//	            } else {
+//	                // 기존 파일 정보 유지
+//	                vo.setFilename(vo.getFilename());
+//	                vo.setFilesize(vo.getFilesize());
+//	            }
+//	            
+//	            // 두 번째 파일 처리
+//	            String filename2 = null;
+//	            int filesize2 = 0;
+//	            if (multi.getFilesystemName("file2") != null) {
+//	                filename2 = multi.getFilesystemName("file2");
+//	                filesize2 = (int) multi.getFile("file2").length();
+//
+//	                vo.setFilename2(filename2);
+//	                vo.setFilesize2(filesize2);
+//	            }
 
 	            // 데이터베이스 업데이트
-	            BoardDao dao = new BoardDaoImpl();
 	            dao.update(vo);
-	            WebUtil.redirect(request, response, "/mysite/board?a=list");
+	            WebUtil.redirect(request, response, "/mysite/board?a=list&nowPage="+nowPage);
 			}
 	        
 		} catch (NullPointerException e) {

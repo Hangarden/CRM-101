@@ -92,6 +92,9 @@ public class BoardDaoImpl implements BoardDao {
 			
 			try {
 				conn = getConnection();
+				System.out.println(option);
+				System.out.println(kwd);
+				
 
 				// 3. SQL문 준비 / 바인딩 / 실행
 				String query = "";
@@ -118,23 +121,44 @@ public class BoardDaoImpl implements BoardDao {
 						System.out.println("리스트 출력: 파일전용 쿼리");
 					}
 					else {
-						query = "SELECT c.*\r\n"
-								+ "FROM (\r\n"
-								+ "    SELECT ROWNUM AS rn, b.*\r\n"
-								+ "    FROM (\r\n"
-								+ "        SELECT b.no, b.title, b.hit, TO_CHAR(b.reg_date, 'YY-MM-DD HH24:MI') AS reg_date, b.user_no, u.name \r\n"
-								+ "        FROM board b, users u \r\n"
-								+ "        WHERE b.user_no = u.no\r\n"
-								+ "		   AND " + option + " LIKE ?\r\n"
-								+ "        ORDER BY no DESC\r\n"
-								+ "    ) b\r\n"
-								+ ") c\r\n"
-								+ "WHERE c.rn BETWEEN ? AND ?";
-						pstmt = conn.prepareStatement(query);
-						pstmt.setString(1, "%"+kwd+"%");
-						pstmt.setInt(2,startNum);
-						pstmt.setInt(3,startNum + pagePerNum-1);
-						System.out.println("리스트 출력: 일반 쿼리");
+						if("reg_date".equals(option)) {
+							System.out.println("여기 걸리니");
+							query = "SELECT c.*\r\n"
+									+ "FROM (\r\n"
+									+ "    SELECT ROWNUM AS rn, b.*\r\n"
+									+ "    FROM (\r\n"
+									+ "        SELECT b.no, b.title, b.hit, TO_CHAR(b.reg_date, 'YY-MM-DD HH24:MI') AS reg_date, b.user_no, u.name \r\n"
+									+ "        FROM board b, users u \r\n"
+									+ "        WHERE b.user_no = u.no\r\n"
+									+ "		   AND trunc(" + option + ")  = to_date(?, 'YYYY-MM-DD')\r\n"
+									+ "        ORDER BY no DESC\r\n"
+									+ "    ) b\r\n"
+									+ ") c\r\n"
+									+ "WHERE c.rn BETWEEN ? AND ?";
+							pstmt = conn.prepareStatement(query);
+							pstmt.setString(1, kwd);
+							pstmt.setInt(2,startNum);
+							pstmt.setInt(3,startNum + pagePerNum-1);
+							System.out.println("리스트 출력: 일반 쿼리");
+						}else {
+							query = "SELECT c.*\r\n"
+									+ "FROM (\r\n"
+									+ "    SELECT ROWNUM AS rn, b.*\r\n"
+									+ "    FROM (\r\n"
+									+ "        SELECT b.no, b.title, b.hit, TO_CHAR(b.reg_date, 'YY-MM-DD HH24:MI') AS reg_date, b.user_no, u.name \r\n"
+									+ "        FROM board b, users u \r\n"
+									+ "        WHERE b.user_no = u.no\r\n"
+									+ "		   AND " + option + " LIKE ?\r\n"
+									+ "        ORDER BY no DESC\r\n"
+									+ "    ) b\r\n"
+									+ ") c\r\n"
+									+ "WHERE c.rn BETWEEN ? AND ?";
+							pstmt = conn.prepareStatement(query);
+							pstmt.setString(1, "%"+kwd+"%");
+							pstmt.setInt(2,startNum);
+							pstmt.setInt(3,startNum + pagePerNum-1);
+							System.out.println("리스트 출력: 일반 쿼리");							
+						}
 					}
 				}
 				else {
@@ -218,15 +242,28 @@ public class BoardDaoImpl implements BoardDao {
 					System.out.println("총 레코드 갯수: 파일전용 쿼리");
 				}
 				else {
-					query = "SELECT COUNT(no) 	\r\n"
-							+ "FROM\r\n"
-							+ "(SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name\r\n"
-							+ "FROM BOARD b, USERS u\r\n"
-							+ "WHERE "+ keyField +" LIKE ?\r\n"
-							+ "AND b.USER_NO = u.NO)";
-					pstmt = conn.prepareStatement(query);
-					pstmt.setString(1, "%" + keyWord + "%");
-					System.out.println("총 레코드 갯수: 일반 쿼리");
+					if("reg_date".equals(keyField)) {
+						System.out.println("날짜"+ keyWord);
+						query = "SELECT COUNT(no) 	\r\n"
+								+ "FROM\r\n"
+								+ "(SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name\r\n"
+								+ "FROM BOARD b, USERS u\r\n"
+								+ "WHERE trunc(" + keyField + ")  = to_date(?, 'YYYY-MM-DD')\r\n"
+								+ "AND b.USER_NO = u.NO)";
+						pstmt = conn.prepareStatement(query);
+						pstmt.setString(1, keyWord);
+						System.out.println("총 레코드 갯수: 날짜 쿼리");			
+						}else{
+							query = "SELECT COUNT(no) 	\r\n"
+									+ "FROM\r\n"
+									+ "(SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name\r\n"
+									+ "FROM BOARD b, USERS u\r\n"
+									+ "WHERE "+ keyField +" LIKE ?\r\n"
+									+ "AND b.USER_NO = u.NO)";
+							pstmt = conn.prepareStatement(query);
+							pstmt.setString(1, "%" + keyWord + "%");
+							System.out.println("총 레코드 갯수: 일반 쿼리");						
+						}
 				}
 			}
 			else {
@@ -498,6 +535,7 @@ public class BoardDaoImpl implements BoardDao {
 		
 		ResultSet rs = null;
 		List<BoardVo> list = new ArrayList<BoardVo>();
+		System.out.println("search 메소드 들어옴"+ option);
 
 
 		try {
@@ -524,11 +562,12 @@ public class BoardDaoImpl implements BoardDao {
 		               "FROM BOARD b, USERS u " +
 		               "WHERE u.NAME LIKE ? " +
 		               "AND b.USER_NO = u.NO";
-		  }else if(option.equals("post_date")) {
+		  }else if(option.equals("reg_date")) {
+			  System.out.println("여기입니다요");
 			  query = "SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name " +
 		               "FROM BOARD b, USERS u " +
-		               "WHERE b.reg_date LIKE ? " +
-		               "AND b.USER_NO = u.NO";
+		               "WHERE to_char(b.reg_date, 'YYYY-MM-DD') = ? " +
+		               "AND b.USER_NO = u.NO ";
 		  }else if(option.equals("title")) {
 			  query = "SELECT b.no, b.TITLE, b.HIT, to_char(b.reg_date, 'YY-MM-DD HH24:MI') as reg_date, u.no as user_no, u.name " +
 		               "FROM BOARD b, USERS u " +

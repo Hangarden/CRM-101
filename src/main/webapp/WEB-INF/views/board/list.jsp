@@ -19,14 +19,14 @@
 			<div id="board">
 				<form id="search_form" action="/mysite/board" method="post">
 				<input type="hidden" name="a" value="list">
-					<select name="option">
+					<select name="option" onchange="document.getElementById('kwd').placeholder = (this.value === 'reg_date') ? 'YYYY-MM-DD 형식으로 작성해주세요.' : '';">
         				<option value="name" selected>작성자</option>
         				<option value="reg_date">게시물 작성일시</option>
         				<option value="title">제목</option>
         				<option value="content">내용</option>
         				<option value="filename">파일이름</option>
-    				</select>					
-					<input type="text" id="kwd" name="kwd" value="${d_kwd }">
+    				</select>				
+					<input type="text" id="kwd" name="kwd" value="${d_kwd}" placeholder="">
 					<input type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex">
@@ -41,7 +41,7 @@
 					<c:forEach items="${list}" var="vo">
 						<tr>
 							<td>${vo.no }</td>
-							<td><a href="/mysite/board?a=read&no=${vo.no }"> ${vo.title } </a></td>
+							<td><a href="/mysite/board?a=read&no=${vo.no }&nowPage=${nowPage}"> ${vo.title } </a></td>
 							<td>${vo.userName }</td>
 							<td>${vo.hit }</td>
 							<td>${vo.regDate }</td>
